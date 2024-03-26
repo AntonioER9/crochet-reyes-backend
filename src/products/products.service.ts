@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-// import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 import { Product } from './entities/product.entity';
 import { validate as isUUID } from 'uuid';
@@ -61,9 +60,8 @@ export class ProductsService {
         .where('UPPER(title) =:title or slug =:slug', {
           title: term.toUpperCase(),
           slug: term.toLowerCase(),
-        }).getOne();
+        }).getOne(); //solo me interesa el que me hayan dado en la request
     }
-
 
     if (!product)
       throw new NotFoundException(`Product with ${term} not found`);
@@ -73,7 +71,7 @@ export class ProductsService {
 
   async update(id: string, updateProductDto: UpdateProductDto) {
 
-    const product = await this.productRepository.preload({
+    const product = await this.productRepository.preload({ //precarga el producto encontrado por el id y cargale los nuevos valores de updateProductDTO
       id: id,
       ...updateProductDto
     });
@@ -102,7 +100,6 @@ export class ProductsService {
       throw new BadRequestException(error.detail);
 
     this.logger.error(error)
-    // console.log(error)
     throw new InternalServerErrorException('Unexpected error, check server logs');
 
   }

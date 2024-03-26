@@ -31,12 +31,11 @@ export class CreateProductDto {
   @IsIn(['small', 'medium', 'big', 'all'])
   size: string
 
+  @IsString({ each: true })
+  @IsArray()
+  @IsOptional()
+  tags: string[];
+
   // @IsIn(['men', 'women', 'kid', 'unisex'])
   // gender: string;
-
-  // @IsString({ each: true })
-  // @IsArray()
-  // @IsOptional()
-  // tags: string[];
-
 }
