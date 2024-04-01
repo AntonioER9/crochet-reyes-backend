@@ -15,8 +15,6 @@ import { ValidRoles } from './interfaces';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
-
-
   @Post('register')
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.authService.create(createUserDto);
@@ -27,14 +25,13 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
-  // @Get('check-status')
-  // @Auth()
-  // checkAuthStatus(
-  //   @GetUser() user: User
-  // ) {
-  //   return this.authService.checkAuthStatus(user);
-  // }
-
+  @Get('check-status')
+  @Auth()
+  checkAuthStatus(
+    @GetUser() user: User
+  ) {
+    return this.authService.checkAuthStatus(user);
+  }
 
   @Get('private')
   @UseGuards(AuthGuard())
@@ -69,7 +66,6 @@ export class AuthController {
       user
     }
   }
-
 
   @Get('private3')
   @Auth(ValidRoles.admin, ValidRoles.superUser)
