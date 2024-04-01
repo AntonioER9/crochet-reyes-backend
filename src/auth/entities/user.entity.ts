@@ -32,11 +32,11 @@ export class User {
     })
     roles: string[];
 
-    // @OneToMany(
-    //     () => Product,
-    //     ( product ) => product.user
-    // )
-    // product: Product;
+    @OneToMany(
+        () => Product,
+        ( product ) => product.user
+    )
+    product: Product;
 
     //Triggers
     

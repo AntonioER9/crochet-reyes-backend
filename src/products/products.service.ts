@@ -8,6 +8,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { validate as isUUID } from 'uuid';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { ProductImage, Product } from 'src/products/entities';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
 export class ProductsService {
@@ -18,22 +19,20 @@ export class ProductsService {
 
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-
     @InjectRepository(ProductImage)
     private readonly productImageRepository: Repository<ProductImage>,
-
     private readonly dataSource: DataSource,
 
   ) { }
 
-  async create(createProductDto: CreateProductDto) {
+  async create(createProductDto: CreateProductDto, user: User) {
 
     try {
       const { images = [], ...productDetails } = createProductDto;
-
       const product = this.productRepository.create({
         ...productDetails,
-        images: images.map( image => this.productImageRepository.create({ url: image }) )
+        images: images.map( image => this.productImageRepository.create({ url: image }) ),
+        user,
       });
 
       await this.productRepository.save(product);
@@ -96,7 +95,7 @@ export class ProductsService {
     }
   }
 
-  async update( id: string, updateProductDto: UpdateProductDto ) {
+  async update( id: string, updateProductDto: UpdateProductDto, user: User ) {
 
     const { images, ...toUpdate } = updateProductDto;
 
@@ -120,6 +119,7 @@ export class ProductsService {
       }
       
       // await this.productRepository.save( product );
+      product.user = user;
       await queryRunner.manager.save( product ); //GUARDAR EL PRODUCTO EN MEMORIA.
 
       await queryRunner.commitTransaction(); //IMPACTA LA BASE DE DATOS

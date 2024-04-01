@@ -1,5 +1,6 @@
-import { ProductImage } from 'src/products/entities/product-image.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../../auth/entities/user.entity';
+import { ProductImage } from './';
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'products' }) //nombre de la tabla
 export class Product {
@@ -54,6 +55,12 @@ export class Product {
   )
   images?: ProductImage[];
 
+  @ManyToOne(
+      () => User,
+      ( user ) => user.product,
+      { eager: true }
+  )
+  user: User
 
   @BeforeInsert()
   checkSlugInsert() {
@@ -68,11 +75,11 @@ export class Product {
       .replaceAll("'", '')
   }
 
-  // @BeforeUpdate()
-  // checkSlugUpdate() {
-  //   this.slug = this.slug
-  //     .toLowerCase()
-  //     .replaceAll(' ', '_')
-  //     .replaceAll("'", '')
-  // }
+  @BeforeUpdate()
+  checkSlugUpdate() {
+    this.slug = this.slug
+      .toLowerCase()
+      .replaceAll(' ', '_')
+      .replaceAll("'", '')
+  }
 }
