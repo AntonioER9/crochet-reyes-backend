@@ -7,6 +7,7 @@ import { SeedModule } from './seed/seed.module';
 import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -22,15 +23,14 @@ import { join } from 'path';
       autoLoadEntities: true,
       synchronize: true, //sincronización automatica de filas o columnas ojo en PROD
     }),
-
     ServeStaticModule.forRoot({
       rootPath: join(__dirname,'..','public')
     }),
-
     ProductsModule,
     CommonModule,
     SeedModule,
     FilesModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
